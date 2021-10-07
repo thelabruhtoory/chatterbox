@@ -1,0 +1,100 @@
+I made these services to run the chat servers as their respective processes. 
+This way I would not have to manually start each server instance upon reboot.
+This also frees up the number of terminal windows that are needed to be open. 
+
+
+----------------------------------------------------------------------------
+EDITING THE SRC/MAIN.GO FILES
+
+*In the respective src/go files, make sure you put the full path to its public folder
+
+*Ex: I am running this on nginx, and store chatterbox in /var/www/, 
+so I would make the public folder path (for the blue chat) "/var/www/chatterbox/chat-blue/public" 
+
+*make sure to edit all the src/main.go files with their public folder's full location.
+
+
+To make the services, you first have to compile the go files.
+I am running linux, and I like to store completed apps in the /opt folder.
+I have made a folder in the /opt folder for all the compiled programs to go. (mkdir /opt/chats)
+
+I compiled the programs like so:
+
+$ sudo go build -o /opt/chats/chat1 /var/www/chatterbox/chat-blue/src/main.go
+
+This outputs the blue chat to /opt/chats/chat1.
+
+Then I would compile the red chat:
+
+$ sudo go build -o /opt/chats/chat2 /var/www/chatterbox/chat-red/src/main.go
+
+and so on for however many chats that you have.
+
+I edited and compiled all 4 original chat servers, now I have chat1,chat2,chat3,chat4 in my /opt/chats/ folder
+
+
+-------------------------------------------------------
+CREATING SERVICES
+
+Ok now for creating the services.
+
+Again, I am on linux, and have systemd. (This can be found on most common linux distros like Ubuntu)
+
+
+For organization, I made a folder in /opt/chats/ called services.
+
+If you have only edited the src/main.go files, and have not changed where you put the compiled programs, then simply follow along.
+However I will explain what you should do if you have changed the folders where you compiled the programs.
+
+For this project, in /opt/chats/services/, you can copy the services from chatterbox to the services folder:
+
+$ sudo cp /path/to/chatterbox/services/* /opt/chats/services/
+
+-----
+If you changed the path to compile the src/main.go programs, then you need to edit the services.
+
+*edit this line in each respective service (using blue as an example)
+
+ExecStart=/opt/chat/services/chat1
+
+edit this line to:
+
+ExecStart=/full/path/to/your/chat1
+
+-----
+
+(Following the project)
+Now copy thos services into systemd:
+
+$ sudo cp /opt/chats/services/* /etc/systemd/system/
+
+-----
+
+(If you changed the location for the services)
+copy them from their path:
+
+$ sudo cp /full/path/to/services/* /etc/systemd/system/
+
+-----
+
+Since new files have been added to systemd, you need to reload the unit file definitions:
+
+$ sudo systemctl daemon-reload
+
+Now enable each service:
+
+$ sudo systemctl enable chat1.service
+$ sudo systemctl enable chat2.service
+
+and so on until every service is enabled.
+Now, you can simply start your services:
+
+$ sudo systemctl start chat1.service
+$ sudo systemctl start chat2.service
+
+You can check the status of your services:
+
+$ sudo systemctl start chat1.service
+$ sudo systemctl start chat2.service
+
+Now your chat servers will start on boot and not require a terminal window to be constantly open.

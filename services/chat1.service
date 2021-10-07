@@ -1,0 +1,14 @@
+[Unit]
+Description=Chat service 1
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/opt/chats/chat1
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

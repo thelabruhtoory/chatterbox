@@ -1,0 +1,92 @@
+For setting up the default servers, you only need to edit the src/main.go files.
+
+Http:
+    > you only need to change where it says '../public' to '/full/path/to/your/chatterbox/chat-color/public'
+
+Https:
+    > you will not only make the same changes as for http, but you will also need to add your ssl cert and key
+    > see the https template for doing so...
+
+
+
+
+Here are the parts to focus on for customizing css:
+(*This makes the blue chat)
+(#edit these files' elements to either include these attributes or change to these attributes)
+
+
+
+(text1)
+
+---style3big.css 
+html {
+    color: #ffffff;
+
+
+(chat box)
+
+---style.css
+#chat-messages {
+    color: #ffffff;
+    height: 70vh;
+
+---<style>	?
+.chip {
+    (remove color: rgba(000006);)
+    background-color: #182fa5;
+}
+
+---style3big.css
+.card .card-content {
+    background-color:#484848;
+
+---style3big.css
+*, *:before, *:after {
+    background-color: #484848;
+    color: #484848;
+
+
+
+
+
+
+(join button)
+
+---style2.css
+.material-icons {
+    color: #ffffff;
+
+---style3big.css
+.btn, .btn-large{
+    background-color: #182fa5;
+
+
+
+(send button)
+
+---style3big.css
+.btn:hover, .btn-large:hover {
+    background-color: #182fa5;
+
+.btn:focus, .btn-large:focus {
+    background-color: #182fa5;  
+
+.btn:focus {
+    background-color: #182fa5; 
+
+
+
+(top)
+
+---style3big.css
+ nav .nav-wrapper{
+    background-color: #1e44ac;
+
+
+
+(bottom)
+---style3big.css
+footer.page-footer{
+	background-color: #1e44ac;
+    margin-top: 0px;
+    padding-top: 15px;

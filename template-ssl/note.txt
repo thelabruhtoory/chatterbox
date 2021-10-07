@@ -1,0 +1,84 @@
+*See http template note for some help customizing css
+
+
+Basically, you have golang serve with its TLS function, and JS connect with a wss:// websocket instead of ws://.
+
+You need an ssl certificate and key for that certificate in order to host and connect to the chat server properly.
+
+You can use certbot (preferably on linux) to generate a trusted ssl cert & key that works for free.
+The only thing is that you need an actual website for this method of generating ssl certs and keys.
+Otherwise, your self-signed certs and keys will be untrusted and marked as malicious by browsers.
+
+
+Prerequisites (linux):
+- install nginx 
+    $ sudo apt update && apt install nginx
+
+- an actual http website (I like to add and use registered domains so that I can keep things running and connect from anywhere on the web).
+    > (register domain)
+    > go to www.freenom.com 
+    > search for any domain you want
+    > if it is availible, then select it
+    > (workaround) if the domain you want wont select, search the domain and dns extention then select it
+    > EX: search --> myawesomedomain.cf (freenom should have .cf, .tk, .ml etc...)
+    > register a free account if needed
+    > buy the domain (if it says $0.00 it will be free and you do not need a card)
+
+    - (point the domain to your server)
+        > go to Services-My Domains-Manage Domain(to the right of your domain name)-Manage Freenom DNS
+        >In add records, name whatever you want your server's name to be seen as
+        >For Target, enter your Public IP (what address that your ISP assigns, if your not sure, google 'my ip')
+        > This public ip should end up pointing to either your local network router, or your dedicated IP if assigned by your ISP
+        > *I am going to assumes that it is your local network router
+        > You need to make sure that the ports used in the website will be able to be access
+        > In other words, you need to be able to forward traffic on certain ports
+        > Lookup port forwarding for your router. (need 80, 443, 8000-8004, and 8080 unless you change them in the src/go files)
+        > once ports are forwarded, then you can serve and recieve content from a hosting platform like nginx
+
+- configure nginx for serving and recieving on your domain
+    > $ cd /etc/nginx/
+
+    > remove default site config
+    > $ sudo rm -rf sites-availible/default
+    > $ sudo rm -rf sites-enabled/default
+
+    > make a new and better site config
+    > (copy serv.conf to conf.d/)
+    > $ sudo cp /full/path/to/where/you/cloned/chatterbox/template-ssl/serv.conf conf.d/
+    > $ sudo nano conf.d/serv.conf
+    > change all the mydomain.dns (there are 4) to your freenom domain name with its dns extenstion EX: myawesomedomain.cf 
+    > ctrl x, press y, press enter
+
+
+Finally getting the certificate:
+
+U can generate a cert&key with certbot by running the following commands:
+
+(install)
+> $ sudo apt-get install software-properties-common
+> $ sudo add-apt-repository ppa:certbot/certbot
+> $ sudo apt-get update
+> $ sudo apt-get install python-certbot-nginx
+
+(generate)
+> $ sudo certbot --nginx
+> you should see your domain.dns being selected, otherwise follow the instructions 
+> *you can use redirect.
+> $ sudo systemctl restart nginx
+
+
+(check for path to certificate and key)
+> $ certbot certificates
+> Done! Now you have a domain, port forwarding, hosting, and ssl setup
+
+(hosting the chat servers)
+> cd to the src folder in a chat room and run the main.go file
+> now try visiting your domain.dns on the port specified in the go file
+> EX: https://myawesomedomain.cf:8000 
+> you can move your chatterbox chats to /var/www/ if you want (see Services/note.txt in chatterbox)
+
+
+*for hosting websites on nginx, I will be making a super simple website layout
+*or you can use google and yt.
+
+DONE!!!
