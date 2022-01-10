@@ -1,5 +1,5 @@
 #!/bin/bash
-#edit nginx
+#info
 read -p "What is your website domain name? (EX: mydomain.com)> " domain
 echo "In a separate terminal, if you have not already done so, "
 echo "Run the following command to get an ssl cert for your domain: "
